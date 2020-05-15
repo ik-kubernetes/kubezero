@@ -9,26 +9,30 @@ metadata:
     helm.sh/chart: {{ .root.Chart.Name }}-{{ .root.Chart.Version | replace "+" "_" }}
     app.kubernetes.io/managed-by: {{ .root.Release.Service }}
     app.kubernetes.io/part-of: kubezero
+  {{- if not .retain }}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  {{ end }}
 spec:
   project: kubezero
 
   source:
-    repoURL: {{ default .root.Values.defaultSource.repoURL }}
-    targetRevision: {{ default .root.Values.defaultSource.targetRevision }}
+    repoURL: {{ .root.Values.global.defaultSource.repoURL }}
+    targetRevision: {{ .root.Values.global.defaultSource.targetRevision }}
     {{- if eq .type "helm" }}
-    {{ $values := index .root.Values .name "values" }}
-    path: {{ default .root.Values.defaultSource.pathPrefix }}charts/kubezero-{{ .name }}
-    {{- if $values }}
+    {{- $my_values := index .root.Values .name "values" }}
+    path: {{ .root.Values.global.defaultSource.pathPrefix}}charts/kubezero-{{ .name }}
+    {{- if $my_values }}
     helm:
       values: |
-{{- toYaml $values | nindent 8 }}
+{{- toYaml $my_values | nindent 8 }}
     {{- end }}
     {{- else }}
-    path: {{ default .root.Values.defaultSource.pathPrefix }}artifacts/kubezero-{{ .name }}
+    path: {{ .root.Values.global.defaultSource.pathPrefix }}artifacts/kubezero-{{ .name }}
     {{- end }}
 
   destination:
-    server: {{ default .root.Values.defaultDestination.server }}
+    server: {{ .root.Values.global.defaultDestination.server }}
     namespace: {{ default "kube-system" .namespace }}
 
   syncPolicy:
