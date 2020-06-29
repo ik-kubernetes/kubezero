@@ -14,13 +14,16 @@ global:
     pathPrefix: ''
 
 calico:
-  enabled: false
+  enabled: true
 
 local-volume-provisioner:
-  enabled: false
+  enabled: true
 
 cert-manager:
-  enabled: false
+  enabled: true
 
 kiam:
-  enabled: false
+  enabled: true
+
+aws-ebs-csi-driver:
+  enabled: true

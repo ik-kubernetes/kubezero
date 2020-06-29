@@ -1,15 +1,23 @@
 kiam:
   server:
-    # assumeRoleArn: <INSERT_CLOUDFORMATION_OUTPUT_KiamServerRoleArn> 
+    image:
+      tag: "v3.6-rc1"
+    # kiam.server.assumeRoleArn --  kiam server IAM role to assume, required as we run the agents next to the servers normally, eg. arn:aws:iam::123456789012:role/kiam-server-role
+    assumeRoleArn: ''
     useHostNetwork: true
     sslCertHostPath: /etc/ssl/certs
     tlsSecret: kiam-server-tls
+    tlsCerts:
+      certFileName: tls.crt
+      keyFileName:  tls.key
+      caFileName:   ca.crt
     service:
       port: 6444
       targetPort: 6444
     deployment:
       enabled: true
-      replicas: 2
+      replicas: 1
+    updateStrategy: RollingUpdate
     tolerations:
     - key: node-role.kubernetes.io/master
       effect: NoSchedule
@@ -18,23 +26,33 @@ kiam:
     prometheus:
       servicemonitor:
         enabled: false
-  #  log:
-  #    level: warn
-  
+    log:
+      level: warn
+
   agent:
+    image:
+      tag: "v3.6-rc1"
+    gatewayTimeoutCreation: "5s"
+    updateStrategy: RollingUpdate
+    # IP tables set on each node at boot, see CloudBender
     host:
-      iptables: true
+      iptables: false
+      interface: "cali+"
     whiteListRouteRegexp: '^/latest/(meta-data/instance-id|dynamic)'
     sslCertHostPath: /etc/ssl/certs
     tlsSecret: kiam-agent-tls
+    tlsCerts:
+      certFileName: tls.crt
+      keyFileName:  tls.key
+      caFileName:   ca.crt
     tolerations:
     - key: node-role.kubernetes.io/master
       effect: NoSchedule
     prometheus:
       servicemonitor:
         enabled: false
-  #  log:
-  #    level: warn
+    log:
+      level: warn
   #  extraEnv:
   #  - name: GRPC_GO_LOG_SEVERITY_LEVEL
   #    value: "info"

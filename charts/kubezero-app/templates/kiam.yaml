@@ -1,3 +1,0 @@
-{{- if index .Values "kiam" "enabled" }}
-{{ template "kubezero.app" dict "root" . "name" "kiam" "type" "helm" }}
-{{- end }}

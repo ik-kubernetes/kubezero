@@ -1,14 +1,18 @@
 apiVersion: v2
-name: kubezero
-description: KubeZero ArgoCD Application - Root App of Apps chart of KubeZero
+name: kubezero-aws-ebs-csi-driver
+description: KubeZero Umbrella Chart for aws-ebs-csi-driver
 type: application
-version: 0.3.0
+version: 0.1.0
 home: https://kubezero.com
 icon: https://cdn.zero-downtime.net/assets/kubezero/logo-small-64.png
+sources:
+  - https://github.com/kubernetes-sigs/aws-ebs-csi-driver
+  - https://github.com/Zero-Down-Time/kubezero
 keywords:
   - kubezero
-  - argocd
-  - gitops
+  - aws
+  - ebs
+  - csi
 maintainers:
   - name: Quarky9
 dependencies:
