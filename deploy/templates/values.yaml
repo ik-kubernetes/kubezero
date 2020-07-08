@@ -1,10 +1,18 @@
 kubezero:
   {{- if .Values.global }}
-  globals:
+  global:
     {{- toYaml .Values.global | nindent 4 }}
   {{- end }}
   calico:
     enabled: {{ .Values.calico.enabled  }}
+    type: {{ default "kustomize" .Values.calico.type  }}
+    values:
+      migration: {{ default false .Values.calico.migration }}
+      prometheus: false
+      # prometheus: {{ .Values.prometheus.enabled }}
+      {{- if .Values.calico.network }}
+      network: {{ .Values.calico.network }}
+      {{- end }}
   cert-manager:
     enabled: {{ index .Values "cert-manager" "enabled" }}
     values:

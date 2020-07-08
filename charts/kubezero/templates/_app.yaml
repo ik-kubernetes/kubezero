@@ -9,7 +9,7 @@ metadata:
   {{- if not .retain }}
   finalizers:
     - resources-finalizer.argocd.argoproj.io
-  {{ end }}
+  {{- end }}
 spec:
   project: kubezero
 
@@ -31,11 +31,4 @@ spec:
   destination:
     server: {{ .root.Values.global.defaultDestination.server }}
     namespace: {{ default "kube-system" .namespace }}
-
-  syncPolicy:
-    automated:
-      prune: true
-      {{- if .selfheal }}
-      selfHeal: true
-      {{- end }}
 {{- end }}
