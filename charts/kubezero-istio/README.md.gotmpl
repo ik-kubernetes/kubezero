@@ -1,0 +1,20 @@
+{{ template "chart.header" . }}
+{{ template "chart.description" . }}
+
+Installs Istio Operator and KubeZero Istio profile
+
+
+{{ template "chart.versionLine" . }}
+
+{{ template "chart.sourceLinkLine" . }}
+
+{{ template "chart.requirementsSection" . }}
+
+## KubeZero default configuration
+- mapped istio-operator to run on the controller nodes only
+
+{{ template "chart.valuesSection" . }}
+
+## Resources
+
+- https://istio.io/latest/docs/setup/install/standalone-operator/

@@ -10,17 +10,13 @@ kubezero:
       migration: {{ default false .Values.calico.migration }}
       prometheus: false
       # prometheus: {{ .Values.prometheus.enabled }}
-      {{- if .Values.calico.network }}
-      network: {{ .Values.calico.network }}
-      {{- end }}
+      network: {{ default "vxlan" .Values.calico.network }}
+      mtu: {{ default "8941" .Values.calico.mtu }}
   cert-manager:
     enabled: {{ index .Values "cert-manager" "enabled" }}
+{{- if not .Values.bootstrap }}
     values:
-{{- if .Values.bootstrap }}
-      localCA:
-        enabled: false 
-{{- else }}
-      {{- if .Values.aws }}
+      {{- if eq .Values.platform "aws" }}
       cert-manager:
         podAnnotations:
           iam.amazonaws.com/role: "{{ index .Values "cert-manager" "IamArn" }}"
@@ -36,12 +32,17 @@ kubezero:
               {{- . | toYaml | nindent 14 }}
               {{- end }}
             dns01:
-              {{- if .Values.aws }}
+              {{- if eq .Values.platform "aws" }}
               route53:
                 region: {{ .Values.region }}
+              {{- else }}
+              {{- with index .Values "cert-manager" "solvers" }}
+              {{- . | toYaml | nindent 14 }}
+              {{- end }}
               {{- end }}
 
-  {{- if .Values.aws }}
+  # AWS only components
+  {{- if eq .Values.platform "aws" }}
   aws-ebs-csi-driver:
     enabled: {{ index .Values "aws-ebs-csi-driver" "enabled" }}
     values:
@@ -63,6 +64,21 @@ kubezero:
             servicemonitor:
               enabled: {{ .Values.prometheus.enabled }}
   {{- end }}
+
+  istio:
+    enabled: {{ .Values.istio.enabled }}
+    values:
+      istiod:
+        replicaCount: {{ ternary 2 1 .Values.HighAvailableControlplane }}
+      ingress:
+        private: {{ .Values.istio.ingress.private }}
+        type: {{ .Values.istio.ingress.type }}
+        replicaCount: {{ default 2 .Values.istio.ingress.replicaCount }}
+        dnsNames:
+        {{- with .Values.istio.ingress.dnsNames }}
+        {{- . | toYaml | nindent 8 }}
+        {{- end }}
+
 {{- end }}
 
 argo-cd:
@@ -74,8 +90,9 @@ argo-cd:
   configs:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- if not .Values.bootstrap }}
+  {{- if and ( not .Values.bootstrap ) .Values.istio.enabled }}
   istio:
-    enabled: {{ .Values.istio.enabled }}
-    gateway: private-ingressgateway.istio-system.svc.cluster.local
+    {{- with index .Values "argo-cd" "istio" }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
   {{- end }}

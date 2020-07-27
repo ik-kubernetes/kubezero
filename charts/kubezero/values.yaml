@@ -32,3 +32,9 @@ kiam:
 
 aws-ebs-csi-driver:
   enabled: false
+
+aws-efs-csi-driver:
+  enabled: false
+
+istio:
+  enabled: false

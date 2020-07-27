@@ -1,4 +1,4 @@
-migration: false
+installCRDs: false
 
 network: vxlan
 
@@ -7,3 +7,9 @@ mtu: 8941
 loglevel: Warning
 
 prometheus: false
+
+customIPPool: {}
+
+# Soon to be removed
+migration: false
+
