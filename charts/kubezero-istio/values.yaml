@@ -6,10 +6,12 @@ ingress:
   autoscaleEnabled: false
   replicaCount: 2
   type: NodePort
-  private: true
+  private:
+    enabled: true
+    nodeSelector: "31080_31443_30671_30672_31224"
   #dnsNames:
   #- "*.example.com"
 
 istio-operator:
   hub: docker.io/istio
-  tag: 1.6.5
+  tag: 1.6.7

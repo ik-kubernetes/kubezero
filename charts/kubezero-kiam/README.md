@@ -2,7 +2,7 @@ kubezero-kiam
 =============
 KubeZero Umbrella Chart for Kiam
 
-Current chart version is `0.2.6`
+Current chart version is `0.2.8`
 
 Source code can be found [here](https://kubezero.com)
 
@@ -11,7 +11,7 @@ Source code can be found [here](https://kubezero.com)
 | Repository | Name | Version |
 |------------|------|---------|
 | https://uswitch.github.io/kiam-helm-charts/charts/ | kiam | 5.8.1 |
-| https://zero-down-time.github.io/kubezero/ | kubezero-lib | >= 0.1.1 |
+| https://zero-down-time.github.io/kubezero/ | kubezero-lib | >= 0.1.3 |
 
 ## KubeZero default configuration
 We run agents on the controllers as well, so we force eg. ebs csi controllers and others to assume roles etc.
@@ -25,7 +25,8 @@ The required certificates for Kiam server and agents are provided by a local cer
 [KubeZero cert-manager](../kubezero-cert-manager/README.md)
 
 ## Metadata restrictions
-Required for the *csi ebs plugin* and most likely various others assuming basic AWS information.
+Some services require access to some basic AWS information. One example is the `aws-ebs-csi` controller.  
+By default all access to the meta-data service is blocked, expect for:  
 
 - `/latest/meta-data/instance-id`
 - `/latest/dynamic/instance-identity/document`
@@ -40,6 +41,8 @@ Required for the *csi ebs plugin* and most likely various others assuming basic 
 | kiam.agent.image.tag | string | `"v3.6"` |  |
 | kiam.agent.log.level | string | `"warn"` |  |
 | kiam.agent.prometheus.servicemonitor.enabled | bool | `false` |  |
+| kiam.agent.prometheus.servicemonitor.interval | string | `"30s"` |  |
+| kiam.agent.prometheus.servicemonitor.labels.release | string | `"metrics"` |  |
 | kiam.agent.sslCertHostPath | string | `"/etc/ssl/certs"` |  |
 | kiam.agent.tlsCerts.caFileName | string | `"ca.crt"` |  |
 | kiam.agent.tlsCerts.certFileName | string | `"tls.crt"` |  |
@@ -56,6 +59,8 @@ Required for the *csi ebs plugin* and most likely various others assuming basic 
 | kiam.server.log.level | string | `"warn"` |  |
 | kiam.server.nodeSelector."node-role.kubernetes.io/master" | string | `""` |  |
 | kiam.server.prometheus.servicemonitor.enabled | bool | `false` |  |
+| kiam.server.prometheus.servicemonitor.interval | string | `"30s"` |  |
+| kiam.server.prometheus.servicemonitor.labels.release | string | `"metrics"` |  |
 | kiam.server.service.port | int | `6444` |  |
 | kiam.server.service.targetPort | int | `6444` |  |
 | kiam.server.sslCertHostPath | string | `"/etc/ssl/certs"` |  |
@@ -76,3 +81,5 @@ Required for the *csi ebs plugin* and most likely various others assuming basic 
 ## Resources
 - https://github.com/uswitch/kiam
 - https://www.bluematador.com/blog/iam-access-in-kubernetes-kube2iam-vs-kiam
+- [Grafana Dashboard](https://raw.githubusercontent.com/uswitch/kiam/master/docs/dashboard-prom.json)
+![Kiam overview](./kiam_architecure.png)

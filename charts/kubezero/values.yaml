@@ -16,13 +16,12 @@ global:
 platform: aws
 
 calico:
-  enabled: true
-  type: kustomize
-  values:
-    migration: false
+  enabled: false
+  retain: true
 
 cert-manager:
-  enabled: true
+  enabled: false
+  namespace: cert-manager
 
 local-volume-provisioner:
   enabled: false
@@ -38,3 +37,11 @@ aws-efs-csi-driver:
 
 istio:
   enabled: false
+
+metrics:
+  enabled: false
+  namespace: monitoring
+
+logging:
+  enabled: false
+  namespace: logging

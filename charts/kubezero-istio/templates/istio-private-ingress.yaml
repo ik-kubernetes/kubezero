@@ -1,9 +1,11 @@
-{{- if .Values.ingress.private }}
+{{- if .Values.ingress.private.enabled }}
 apiVersion: install.istio.io/v1alpha1
 kind: IstioOperator
 metadata:
   name: kubezero-istio-private-ingress
   namespace: istio-system
+  labels:
+{{ include "kubezero-lib.labels" . | indent 4 }}
 spec:
   profile: empty
   components:
@@ -28,25 +30,40 @@ spec:
             name: istio-private-ingressgateway
         {{- end }}
         env:
+        # https://github.com/istio/istio/issues/26524
+        #- name: TERMINATION_DRAIN_DURATION_SECONDS
+        #  value: "60"
         - name: ISTIO_META_HTTP10
           value: '"1"'
         - name: ISTIO_META_ROUTER_MODE
           value: standard
+        - name: ISTIO_META_IDLE_TIMEOUT
+          value: "3600s"
         {{- if eq .Values.ingress.type "NodePort" }}
         nodeSelector:
-          node.kubernetes.io/ingress.private: "31080_31443_30671_30672_31224"
+          node.kubernetes.io/ingress.private: "{{ .Values.ingress.private.nodeSelector }}"
         {{- end }}
         resources:
           limits:
-            cpu: 2000m
+            # cpu: 2000m
             memory: 1024Mi
           requests:
             cpu: 100m
-            memory: 128Mi
+            memory: 64Mi
         strategy:
           rollingUpdate:
             maxSurge: 100%
             maxUnavailable: 25%
+        overlays:
+        - apiVersion: apps/v1
+          kind: Deployment
+          name: istio-private-ingressgateway
+          patches:
+            - path: spec.template.spec.containers.[name:istio-proxy].lifecycle
+              value: {"preStop": {"exec": {"command": ["sh", "-c", "curl -X POST http://localhost:15000/healthcheck/fail && sleep 30"]}}}
+            - path: spec.template.spec.terminationGracePeriodSeconds
+              value: 90
+
   values:
     gateways:
       istio-ingressgateway:
@@ -63,6 +80,11 @@ spec:
           values: istio-private-ingressgateway
         type: {{ default "NodePort" .Values.ingress.type }}
         ports:
+        - name: http-status
+          port: 15021
+          {{- if eq .Values.ingress.type "NodePort" }}
+          nodePort: 31021
+          {{- end }}
         - name: http2
           port: 80
           {{- if eq .Values.ingress.type "NodePort" }}
@@ -73,20 +95,20 @@ spec:
           {{- if eq .Values.ingress.type "NodePort" }}
           nodePort: 31443
           {{- end }}
-        - name: amqp
-          port: 5672
-          {{- if eq .Values.ingress.type "NodePort" }}
-          nodePort: 30672
-          {{- end }}
-        - name: amqps
-          port: 5671
-          {{- if eq .Values.ingress.type "NodePort" }}
-          nodePort: 30671
-          {{- end }}
         - name: fluentd-forward
           port: 24224
           {{- if eq .Values.ingress.type "NodePort" }}
           nodePort: 31224
+          {{- end }}
+        - name: amqps
+          port: 5671
+          {{- if eq .Values.ingress.type "NodePort" }}
+          nodePort: 31671
+          {{- end }}
+        - name: amqp
+          port: 5672
+          {{- if eq .Values.ingress.type "NodePort" }}
+          nodePort: 31672
           {{- end }}
         sds:
           enabled: true

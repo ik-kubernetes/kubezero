@@ -1,0 +1,8 @@
+{{- if index .Values "metrics" "enabled" }}
+{{ include "kubezero-app.app" . }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monitoring
+{{- end }}

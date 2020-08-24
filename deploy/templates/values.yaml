@@ -5,22 +5,25 @@ kubezero:
   {{- end }}
   calico:
     enabled: {{ .Values.calico.enabled  }}
-    type: {{ default "kustomize" .Values.calico.type  }}
     values:
-      migration: {{ default false .Values.calico.migration }}
-      prometheus: false
-      # prometheus: {{ .Values.prometheus.enabled }}
       network: {{ default "vxlan" .Values.calico.network }}
       mtu: {{ default "8941" .Values.calico.mtu }}
+      prometheus: {{ .Values.metrics.enabled }}
   cert-manager:
     enabled: {{ index .Values "cert-manager" "enabled" }}
-{{- if not .Values.bootstrap }}
     values:
+      # Disable all until webhook is in place
+      {{- if index .Values "cert-manager" "not_ready" }}
+      localCA:
+        enabled: false
+      {{- end }}
       {{- if eq .Values.platform "aws" }}
       cert-manager:
         podAnnotations:
           iam.amazonaws.com/role: "{{ index .Values "cert-manager" "IamArn" }}"
       {{- end }}
+
+      {{- if not .Values.kiam.not_ready }}
       clusterIssuer:
         name: letsencrypt-dns-prod
         server: https://acme-v02.api.letsencrypt.org/directory
@@ -40,18 +43,11 @@ kubezero:
               {{- . | toYaml | nindent 14 }}
               {{- end }}
               {{- end }}
+      {{- end }}
 
-  # AWS only components
+
   {{- if eq .Values.platform "aws" }}
-  aws-ebs-csi-driver:
-    enabled: {{ index .Values "aws-ebs-csi-driver" "enabled" }}
-    values:
-      aws-ebs-csi-driver:
-        replicaCount: {{ ternary 2 1 .Values.HighAvailableControlplane }}
-        podAnnotations:
-          iam.amazonaws.com/role: "{{ index .Values "aws-ebs-csi-driver" "IamArn" }}"
-        extraVolumeTags:
-          Name: {{ .Values.ClusterName }}
+  {{- if not ( index .Values "cert-manager" "not_ready" ) }}
   kiam:
     enabled: {{ .Values.kiam.enabled }}
     values:
@@ -62,7 +58,36 @@ kubezero:
             replicas: {{ ternary 2 1 .Values.HighAvailableControlplane }}
           prometheus:
             servicemonitor:
-              enabled: {{ .Values.prometheus.enabled }}
+              enabled: {{ .Values.metrics.enabled }}
+        agent:
+          prometheus:
+            servicemonitor:
+              enabled: {{ .Values.metrics.enabled }}
+  {{- end }}
+
+  {{- if not .Values.kiam.not_ready }}
+  # AWS only components
+  aws-ebs-csi-driver:
+    enabled: {{ index .Values "aws-ebs-csi-driver" "enabled" }}
+    values:
+      aws-ebs-csi-driver:
+        replicaCount: {{ ternary 2 1 .Values.HighAvailableControlplane }}
+        podAnnotations:
+          iam.amazonaws.com/role: "{{ index .Values "aws-ebs-csi-driver" "IamArn" }}"
+        extraVolumeTags:
+          Name: {{ .Values.ClusterName }}
+  {{- end }}
+
+  aws-efs-csi-driver:
+    enabled: {{ index .Values "aws-efs-csi-driver" "enabled" }}
+    values:
+      aws-efs-csi-driver:
+        nodeSelector:
+          node.kubernetes.io/csi.efs.fs: {{ index .Values "aws-efs-csi-driver" "EfsId" }}
+      PersistentVolume:
+        create: true
+        EfsId: {{ index .Values "aws-efs-csi-driver" "EfsId" }}
+        Name: {{ default "kubezero-efs-pv" ( index .Values "aws-efs-csi-driver" "PVName" ) }}
   {{- end }}
 
   istio:
@@ -70,27 +95,118 @@ kubezero:
     values:
       istiod:
         replicaCount: {{ ternary 2 1 .Values.HighAvailableControlplane }}
+      {{- if not ( index .Values "cert-manager" "not_ready" ) }}
+      {{- if .Values.istio.ingress }}
       ingress:
-        private: {{ .Values.istio.ingress.private }}
-        type: {{ .Values.istio.ingress.type }}
-        replicaCount: {{ default 2 .Values.istio.ingress.replicaCount }}
-        dnsNames:
-        {{- with .Values.istio.ingress.dnsNames }}
-        {{- . | toYaml | nindent 8 }}
+        {{- toYaml .Values.istio.ingress | nindent 8 }}
+      {{- end }}
+      {{- end }}
+
+  metrics:
+    enabled: {{ .Values.metrics.enabled }}
+    values:
+      {{- if and .Values.metrics.istio.grafana.enabled .Values.istio.enabled }}
+      grafana:
+        istio:
+          {{- with .Values.metrics.istio.grafana }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
+      {{- end }}
+      {{- if and .Values.metrics.istio.prometheus.enabled .Values.istio.enabled }}
+      prometheus:
+        istio:
+          {{- with .Values.metrics.istio.prometheus }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
+      {{- end }}
+      {{- if index .Values "metrics" "prometheus-operator" }}
+      prometheus-operator:
+        {{- with index .Values "metrics" "prometheus-operator" }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- end }}
+
+  logging:
+    enabled: {{ .Values.logging.enabled }}
+    values:
+      {{- if .Values.logging.elastic_password }}
+      elastic_password: {{ .Values.logging.elastic_password }}
+      {{- end }}
+
+      {{- if .Values.logging.version }}
+      version: {{ .Values.logging.version }}
+      {{- end }}
+
+      {{- if .Values.logging.fullnameOverride }}
+      fullnameOverride: {{ .Values.logging.fullnameOverride }}
+      {{- end }}
+
+      {{- if .Values.logging.es }}
+      es:
+        {{- if .Values.logging.es.nodeSets }}
+        nodeSets:
+        {{- with .Values.logging.es.nodeSets }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- end }}
+        prometheus: {{ .Values.metrics.enabled }}
+
+        {{- if .Values.logging.es.s3Snapshot }}
+        s3Snapshot:
+          {{- with .Values.logging.es.s3Snapshot }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+
+      {{- if .Values.logging.kibana }}
+      kibana:
+        {{- with .Values.logging.kibana }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- end }}
+
+      fluentd:
+        enabled: {{ .Values.logging.fluentd.enabled }}
+        metrics:
+          enabled: {{ .Values.metrics.enabled }}
+        url: {{ .Values.logging.fluentd.url }}
+        {{- if and .Values.logging.fluentd.istio .Values.istio.enabled }}
+        istio:
+          {{- with .Values.logging.fluentd.istio }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
         {{- end }}
 
-{{- end }}
-
+      fluent-bit:
+        enabled: {{ index .Values.logging "fluent-bit" "enabled" }}
+        metrics:
+          enabled: {{ .Values.metrics.enabled }}
+        {{- if index .Values.logging "fluent-bit" "config" }}
+        config:
+          {{- with index .Values.logging "fluent-bit" "config" }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
+        {{- end }}
+        
 argo-cd:
-  {{- with index .Values "argo-cd" "server" }}
+  controller:
+    metrics:
+      enabled: {{ .Values.metrics.enabled }}
+  repoServer:
+    metrics:
+      enabled: {{ .Values.metrics.enabled }}
   server:
+    metrics:
+      enabled: {{ .Values.metrics.enabled }}
+    {{- with index .Values "argo-cd" "server" }}
     {{- toYaml . | nindent 4 }}
-  {{- end }}
+    {{- end }}
   {{- with index .Values "argo-cd" "configs" }}
   configs:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- if and ( not .Values.bootstrap ) .Values.istio.enabled }}
+  {{- if and ( index .Values "argo-cd" "istio" "enabled" ) .Values.istio.enabled }}
   istio:
     {{- with index .Values "argo-cd" "istio" }}
     {{- toYaml . | nindent 4 }}

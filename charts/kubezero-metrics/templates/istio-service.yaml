@@ -1,0 +1,35 @@
+{{- if .Values.grafana.istio.enabled }}
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: grafana
+  labels:
+{{ include "kubezero-lib.labels" . | indent 4 }}
+spec:
+  hosts:
+  - {{ .Values.grafana.istio.url }}
+  gateways:
+  - {{ .Values.grafana.istio.gateway }}
+  http:
+  - route:
+    - destination:
+        host: metrics-grafana
+{{- end }}
+---
+{{- if .Values.prometheus.istio.enabled }}
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: prometheus
+  labels:
+{{ include "kubezero-lib.labels" . | indent 4 }}
+spec:
+  hosts:
+  - {{ .Values.prometheus.istio.url }}
+  gateways:
+  - {{ .Values.prometheus.istio.gateway }}
+  http:
+  - route:
+    - destination:
+        host: metrics-prometheus-operato-prometheus
+{{- end }}

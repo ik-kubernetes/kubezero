@@ -5,7 +5,7 @@ KubeZero Umbrella Chart for Istio
 Installs Istio Operator and KubeZero Istio profile
 
 
-Current chart version is `0.2.0`
+Current chart version is `0.2.3`
 
 Source code can be found [here](https://kubezero.com)
 
@@ -14,7 +14,7 @@ Source code can be found [here](https://kubezero.com)
 | Repository | Name | Version |
 |------------|------|---------|
 |  | istio-operator | >= 1.6 |
-| https://zero-down-time.github.io/kubezero/ | kubezero-lib | >= 0.1.1 |
+| https://zero-down-time.github.io/kubezero/ | kubezero-lib | >= 0.1.3 |
 
 ## KubeZero default configuration
 - mapped istio-operator to run on the controller nodes only
@@ -24,11 +24,12 @@ Source code can be found [here](https://kubezero.com)
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | ingress.autoscaleEnabled | bool | `false` |  |
-| ingress.private | bool | `true` |  |
+| ingress.private.enabled | bool | `true` |  |
+| ingress.private.nodeSelector | string | `"31080_31443_30671_30672_31224"` |  |
 | ingress.replicaCount | int | `2` |  |
 | ingress.type | string | `"NodePort"` |  |
 | istio-operator.hub | string | `"docker.io/istio"` |  |
-| istio-operator.tag | string | `"1.6.5"` |  |
+| istio-operator.tag | string | `"1.6.7"` |  |
 | istiod.autoscaleEnabled | bool | `false` |  |
 | istiod.replicaCount | int | `1` |  |
 
