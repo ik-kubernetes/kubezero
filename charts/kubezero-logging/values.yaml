@@ -31,7 +31,7 @@ fluentd:
   enabled: false
   image:
     repository: quay.io/fluentd_elasticsearch/fluentd
-    tag: v2.9.0
+    tag: v3.0.4
   istio:
     enabled: false
 
@@ -158,7 +158,18 @@ fluentd:
         </buffer>
       </match>
 
-#  filter.conf: |
+    filter.conf: |
+      <filter kube.**>
+        @type parser
+        key_name message
+        remove_key_name_field true
+        reserve_data true
+        emit_invalid_record_to_error false
+        <parse>
+          @type json
+        </parse>
+      </filter>
+
 #    <filter auth system.auth>
 #      @type parser
 #      key_name message
@@ -222,8 +233,24 @@ fluent-bit:
           Refresh_Interval 10
           DB /var/log/flb_kube.db
           DB.Sync Normal
+      [INPUT]
+          Name tail
+          Path /var/log/kubernetes/audit.log
+          Parser json
+          Tag kube.api.audit
+          Mem_Buf_Limit 5MB
+          Skip_Long_Lines On
+          Refresh_Interval 60
+          DB /var/log/flb_kube_audit.db
+          DB.Sync Normal
 
     filters: |
+      [FILTER]
+          Name    lua
+          Match   kube.*
+          script  /fluent-bit/etc/functions.lua
+          call    reassemble_cri_logs
+
       [FILTER]
           Name kubernetes
           Match kube.*
@@ -278,6 +305,25 @@ fluent-bit:
           for k, v in pairs(new_map) do
               map[k] = v
           end
+      end
+
+      local reassemble_state = {}
+
+      function reassemble_cri_logs(tag, timestamp, record)
+         -- IMPORTANT: reassemble_key must be unique for each parser stream
+         -- otherwise entries from different sources will get mixed up.
+         -- Either make sure that your parser tags satisfy this or construct
+         -- reassemble_key some other way
+         local reassemble_key = tag
+         -- if partial line, accumulate
+         if record.logtag == 'P' then
+            reassemble_state[reassemble_key] = reassemble_state[reassemble_key] or "" .. record.message
+            return -1, 0, 0
+         end
+         -- otherwise it's a full line, concatenate with accumulated partial lines if any
+         record.message = reassemble_state[reassemble_key] or "" .. (record.message or "")
+         reassemble_state[reassemble_key] = nil
+         return 1, timestamp, record
       end
 
   serviceMonitor:
