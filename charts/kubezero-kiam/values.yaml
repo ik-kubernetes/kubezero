@@ -1,4 +1,5 @@
 kiam:
+  enabled: true
   server:
     image:
       tag: "v3.6"

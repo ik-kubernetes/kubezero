@@ -7,14 +7,7 @@ metadata:
 {{ include "kubezero-lib.labels" . | indent 4 }}
 spec:
   profile: empty
-  addonComponents:
-    prometheus:
-      enabled: false
   components:
-    citadel:
-      enabled: false
-    galley:
-      enabled: false
     ingressGateways:
     - enabled: true
       k8s:
@@ -34,22 +27,22 @@ spec:
             name: istio-ingressgateway
         {{- end }}
         env:
-        # https://github.com/istio/istio/issues/26524
+        # https://github.com/istio/istio/issues/26524, not in 1.7 !
         #- name: TERMINATION_DRAIN_DURATION_SECONDS
         #  value: "60"
         - name: ISTIO_META_HTTP10
           value: '"1"'
         - name: ISTIO_META_ROUTER_MODE
           value: standard
-        - name: ISTIO_META_IDLE_TIMEOUT
-          value: "3600s"
+        #- name: ISTIO_META_IDLE_TIMEOUT
+        #  value: "3600s"
         {{- if eq .Values.ingress.type "NodePort" }}
         nodeSelector:
           node.kubernetes.io/ingress.public: "30080_30443"
         {{- end }}
         resources:
           limits:
-            # cpu: 2000m
+            #cpu: 2000m
             memory: 1024Mi
           requests:
             cpu: 100m
@@ -92,10 +85,11 @@ spec:
         - effect: NoSchedule
           key: node-role.kubernetes.io/master
 
-    sidecarInjector:
-      enabled: false
     telemetry:
       enabled: false
+  meshConfig:
+    accessLogFile: /dev/stdout
+    accessLogEncoding: 'JSON'
   values:
     gateways:
       istio-ingressgateway:
@@ -119,45 +113,22 @@ spec:
           {{- end }}
         - name: http2
           port: 80
+          targetPort: 8080
           {{- if eq .Values.ingress.type "NodePort" }}
           nodePort: 30080
           {{- end }}
         - name: https
           port: 443
+          targetPort: 8443
           {{- if eq .Values.ingress.type "NodePort" }}
           nodePort: 30443
           {{- end }}
-        sds:
-          enabled: true
-          image: node-agent-k8s
-          resources:
-            limits:
-              cpu: 2000m
-              memory: 1024Mi
-            requests:
-              cpu: 100m
-              memory: 128Mi
-        secretVolumes:
-        - mountPath: /etc/istio/ingressgateway-certs
-          name: ingressgateway-certs
-          secretName: istio-ingressgateway-certs
-        - mountPath: /etc/istio/ingressgateway-ca-certs
-          name: ingressgateway-ca-certs
-          secretName: istio-ingressgateway-ca-certs
-    meshConfig:
-      accessLogFile: /dev/stdout
-      disablePolicyChecks: false
     global:
       jwtPolicy: first-party-jwt
-      omitSidecarInjectorConfigMap: true
-      proxy:
-        accessLogEncoding: JSON
-        autoInject: disabled
-        envoyStatsd:
-          enabled: false
-      useMCP: false
+      logAsJson: true
+      defaultPodDisruptionBudget:
+        enabled: false
     pilot:
-      sidecar: false
       autoscaleEnabled: false
     mixer:
       policy:
