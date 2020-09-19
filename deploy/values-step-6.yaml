@@ -1,8 +1,5 @@
-istio:
-  ready: false
-
 metrics:
-  enabled: false
+  enabled: true
   ready: false
 
 logging:
