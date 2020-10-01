@@ -108,6 +108,8 @@ fluentd:
         port 24224
         bind 0.0.0.0
         skip_invalid_event true
+        # Only for TCP not TLS
+        # send_keepalive_packet true
         <transport tls>
           cert_path /mnt/fluentd-certs/tls.crt
           private_key_path /mnt/fluentd-certs/tls.key
@@ -128,7 +130,6 @@ fluentd:
         remove_keys id
 
         # KubeZero pipeline incl. GeoIP etc.
-        # Freaking ES jams under load and all is lost ...
         # pipeline fluentd
 
         host "#{ENV['OUTPUT_HOST']}"
@@ -146,8 +147,8 @@ fluentd:
         request_timeout 15s
         suppress_type_name true
 
-        <buffer>
-          @type file
+        <buffer tag>
+          @type file_single
           path /var/log/fluentd-buffers/kubernetes.system.buffer
           flush_mode interval
           flush_thread_count 2
@@ -155,7 +156,6 @@ fluentd:
           flush_at_shutdown true
           retry_type exponential_backoff
           retry_timeout 60m
-          chunk_limit_size 16M
           overflow_action drop_oldest_chunk
         </buffer>
       </match>

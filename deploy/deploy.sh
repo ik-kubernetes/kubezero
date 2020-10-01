@@ -2,6 +2,7 @@
 set -e
 
 DEPLOY_DIR=$( dirname $( realpath $0 ))
+which yq || { echo "yq not found!"; exit 1; }
 
 # Waits for max 300s and retries
 function wait_for() {
@@ -31,13 +32,15 @@ else
     _argo_date="$(date -u --iso-8601=seconds)"
     _argo_passwd="$($DEPLOY_DIR/argocd_password.py)"
 
-    cat <<EOF >> values.yaml
+    cat <<EOF > _argocd_values.yaml
+argo-cd:
   configs:
     secret:
       # ArgoCD password: ${_argo_passwd%%:*} Please move to secure location !
       argocdServerAdminPassword: "${_argo_passwd##*:}"
       argocdServerAdminPasswordMtime: "$_argo_date"
 EOF
+    yq merge -i --overwrite values.yaml _argocd_values.yaml && rm -f _argocd_values.yaml
   fi
 
   # Deploy initial argocd
@@ -58,7 +61,6 @@ EOF
     helm template $DEPLOY_DIR -f values.yaml -f cloudbender.yaml -f $DEPLOY_DIR/values-step-2.yaml > generated-values.yaml
     helm upgrade -n argocd kubezero kubezero/kubezero-argo-cd -f generated-values.yaml
     wait_for kubectl get Issuer -n kube-system kubezero-local-ca-issuer 2>/dev/null 1>&2
-    wait_for kubectl get ClusterIssuer letsencrypt-dns-prod 2>/dev/null 1>&2
     kubectl wait --for=condition=Ready -n kube-system Issuer/kubezero-local-ca-issuer
   fi
 
