@@ -78,17 +78,21 @@ kubezero:
   aws-efs-csi-driver:
     enabled: {{ index .Values "aws-efs-csi-driver" "enabled" }}
     values:
+      {{- with index .Values "aws-efs-csi-driver" "nodeSelector" }}
       aws-efs-csi-driver:
         nodeSelector:
-          node.kubernetes.io/csi.efs.fs: {{ index .Values "aws-efs-csi-driver" "EfsId" }}
+        {{- toYaml . | nindent 10 }}
+      {{- end }}
       {{- with index .Values "aws-efs-csi-driver" "PersistentVolumes" }}
       PersistentVolumes:
       {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if index .Values "aws-efs-csi-driver" "EfsId" }}
       PersistentVolume:
         create: true
         EfsId: {{ index .Values "aws-efs-csi-driver" "EfsId" }}
         Name: {{ default "kubezero-efs-pv" ( index .Values "aws-efs-csi-driver" "PVName" ) }}
+      {{- end }}
   {{- end }}
 
   istio:
@@ -120,9 +124,9 @@ kubezero:
           {{- toYaml . | nindent 10 }}
           {{- end }}
       {{- end }}
-      {{- if index .Values "metrics" "prometheus-operator" }}
-      prometheus-operator:
-        {{- with index .Values "metrics" "prometheus-operator" }}
+      {{- if index .Values "metrics" "kube-prometheus-stack" }}
+      kube-prometheus-stack:
+        {{- with index .Values "metrics" "kube-prometheus-stack" }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
       {{- end }}

@@ -31,14 +31,14 @@ argo-cd:
 
   global:
     image:
-      tag: v1.7.7
+      tag: v1.7.8
 
   controller:
     args:
-      statusProcessors: "4"
-      operationProcessors: "2"
+      statusProcessors: "8"
+      operationProcessors: "4"
       appResyncPeriod: "300"
-    # logFormat: json
+    logFormat: json
 
     metrics:
       enabled: false
@@ -48,22 +48,16 @@ argo-cd:
         additionalLabels:
           release: metrics
 
-    # controller to masters
-    nodeSelector:
-      node-role.kubernetes.io/master: ""
-    tolerations:
-    - key: node-role.kubernetes.io/master
-      effect: NoSchedule
     resources:
-      limits:
+      # limits:
         # cpu: 500m
-        memory: 1536Mi
+        # memory: 2048Mi
       requests:
         cpu: 100m
         memory: 256Mi
 
   repoServer:
-    # logFormat: json
+    logFormat: json
     metrics:
       enabled: false
       serviceMonitor:
@@ -72,14 +66,8 @@ argo-cd:
         additionalLabels:
           release: metrics
 
-    nodeSelector:
-      node-role.kubernetes.io/master: ""
-    tolerations:
-    - key: node-role.kubernetes.io/master
-      effect: NoSchedule
-
   server:
-    # logFormat: json
+    logFormat: json
     config:
       # argo-cd.server.config.url -- ArgoCD hostname to be exposed via Istio
       url: argocd.example.com
@@ -123,18 +111,10 @@ argo-cd:
 
     extraArgs:
     - --insecure
-    nodeSelector:
-      node-role.kubernetes.io/master: ""
-    tolerations:
-    - key: node-role.kubernetes.io/master
-      effect: NoSchedule
 
-  redis:
-    nodeSelector:
-      node-role.kubernetes.io/master: ""
-    tolerations:
-    - key: node-role.kubernetes.io/master
-      effect: NoSchedule
+  # redis:
+  # We might want to try to keep redis close to the controller
+  #   affinity:
 
   dex:
     enabled: false
