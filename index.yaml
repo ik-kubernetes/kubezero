@@ -3,10 +3,10 @@ entries:
   fluent-bit:
   - apiVersion: v2
     appVersion: 1.6.6
-    created: "2020-11-30T06:27:16.169357237-08:00"
+    created: "2020-11-30T10:01:36.924248848-08:00"
     description: Fast and lightweight log processor and forwarder or Linux, OSX and
       BSD family operating systems.
-    digest: 5dabbbd9d828f98803e0cc2e8011e0690807e98828653e04c957aef3ac0b1c68
+    digest: 005ad98630beaa75b71e200084c5081962b39e469d1935e3be01341b4c00c5fd
     home: https://fluentbit.io/
     icon: https://fluentbit.io/assets/img/logo1-default.png
     keywords:
@@ -28,7 +28,32 @@ entries:
     version: 0.7.10
   kubezero-argo-cd:
   - apiVersion: v2
-    created: "2020-11-30T06:27:16.17568392-08:00"
+    created: "2020-11-30T10:01:36.937765266-08:00"
+    dependencies:
+    - name: kubezero-lib
+      repository: https://zero-down-time.github.io/kubezero/
+      version: '>= 0.1.3'
+    - name: argo-cd
+      repository: https://argoproj.github.io/argo-helm
+      version: 2.9.5
+    description: KubeZero ArgoCD Helm chart to install ArgoCD itself and the KubeZero
+      ArgoCD Application
+    digest: a537cebba8bef3e9766686954cad8aeb8cb66be61842accecf4b30f1ae376026
+    home: https://kubezero.com
+    icon: https://cdn.zero-downtime.net/assets/kubezero/logo-small-64.png
+    keywords:
+    - kubezero
+    - argocd
+    - gitops
+    kubeVersion: '>= 1.16.0'
+    maintainers:
+    - name: Quarky9
+    name: kubezero-argo-cd
+    urls:
+    - kubezero-argo-cd-0.6.1.tgz
+    version: 0.6.1
+  - apiVersion: v2
+    created: "2020-11-30T10:01:36.930561597-08:00"
     dependencies:
     - name: kubezero-lib
       repository: https://zero-down-time.github.io/kubezero/
@@ -52,16 +77,42 @@ entries:
     urls:
     - kubezero-argo-cd-0.6.0.tgz
     version: 0.6.0
+  kubezero-argocd:
+  - apiVersion: v2
+    created: "2020-11-30T10:01:36.945249986-08:00"
+    dependencies:
+    - name: kubezero-lib
+      repository: https://zero-down-time.github.io/kubezero/
+      version: '>= 0.1.3'
+    - name: argo-cd
+      repository: https://argoproj.github.io/argo-helm
+      version: 2.9.5
+    description: KubeZero ArgoCD Helm chart to install ArgoCD itself and the KubeZero
+      ArgoCD Application
+    digest: 3db64d19c38f407b682fdc69c454f2b23be61b6aa7cc43023b75daf10a5640f4
+    home: https://kubezero.com
+    icon: https://cdn.zero-downtime.net/assets/kubezero/logo-small-64.png
+    keywords:
+    - kubezero
+    - argocd
+    - gitops
+    kubeVersion: '>= 1.16.0'
+    maintainers:
+    - name: Quarky9
+    name: kubezero-argocd
+    urls:
+    - kubezero-argocd-0.6.1.tgz
+    version: 0.6.1
   kubezero-aws-ebs-csi-driver:
   - apiVersion: v2
-    appVersion: 0.7.0
-    created: "2020-11-30T06:27:16.178272995-08:00"
+    appVersion: 0.7.1
+    created: "2020-11-30T10:01:36.946526824-08:00"
     dependencies:
     - name: kubezero-lib
       repository: https://zero-down-time.github.io/kubezero/
       version: '>= 0.1.3'
     description: KubeZero Umbrella Chart for aws-ebs-csi-driver
-    digest: 3046e4a29812006d9adb2758395b274f226d21be6cb7939a2e5afb1386680c76
+    digest: 943648ccd8543cf8dbca07305b2e6d48c4bf9aecc06edbaa87ff676f6b06ca30
     home: https://kubezero.com
     icon: https://cdn.zero-downtime.net/assets/kubezero/logo-small-64.png
     keywords:
@@ -83,13 +134,13 @@ entries:
   kubezero-aws-efs-csi-driver:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2020-11-30T06:27:16.179227943-08:00"
+    created: "2020-11-30T10:01:36.947374205-08:00"
     dependencies:
     - name: kubezero-lib
       repository: https://zero-down-time.github.io/kubezero/
       version: '>= 0.1.3'
     description: KubeZero Umbrella Chart for aws-efs-csi-driver
-    digest: fa997188800d8d409081a8ddc86cda614918e6771e9da5178e5cba66d8ac5ce5
+    digest: 5a365bdc2beececa5a6daf4fd87d2d62d6593d8091e17d5d287329d427198acc
     home: https://kubezero.com
     icon: https://cdn.zero-downtime.net/assets/kubezero/logo-small-64.png
     keywords:
@@ -109,8 +160,30 @@ entries:
     version: 0.2.0
   kubezero-calico:
   - apiVersion: v2
+    appVersion: v3.16.5
+    created: "2020-11-30T10:01:36.951743591-08:00"
+    dependencies:
+    - name: kubezero-lib
+      repository: https://zero-down-time.github.io/kubezero/
+      version: '>= 0.1.3'
+    description: KubeZero Umbrella Chart for Calico
+    digest: 7ac7c9326bea13d68ff31549ef954297460704589943b21dab28443beb3f2c05
+    home: https://kubezero.com
+    icon: https://cdn.zero-downtime.net/assets/kubezero/logo-small-64.png
+    keywords:
+    - kubezero
+    - calico
+    kubeVersion: '>= 1.16.0'
+    maintainers:
+    - name: Quarky9
+    name: kubezero-calico
+    type: application
+    urls:
+    - kubezero-calico-0.2.1.tgz
+    version: 0.2.1
+  - apiVersion: v2
     appVersion: v3.16.1
-    created: "2020-11-30T06:27:16.180886124-08:00"
+    created: "2020-11-30T10:01:36.948985258-08:00"
     dependencies:
     - name: kubezero-lib
       repository: https://zero-down-time.github.io/kubezero/
@@ -132,7 +205,32 @@ entries:
     version: 0.2.0
   kubezero-cert-manager:
   - apiVersion: v2
-    created: "2020-11-30T06:27:16.19201067-08:00"
+    created: "2020-11-30T10:01:36.972629612-08:00"
+    dependencies:
+    - name: kubezero-lib
+      repository: https://zero-down-time.github.io/kubezero/
+      version: '>= 0.1.3'
+    - condition: cert-manager.enabled
+      name: cert-manager
+      repository: https://charts.jetstack.io
+      version: 1.1.0
+    description: KubeZero Umbrella Chart for cert-manager
+    digest: 2e337401391871fe1abb9eb7bb8709ef374d9684cd7d6eed792257819f0a7b24
+    home: https://kubezero.com
+    icon: https://cdn.zero-downtime.net/assets/kubezero/logo-small-64.png
+    keywords:
+    - kubezero
+    - cert-manager
+    kubeVersion: '>= 1.16.0'
+    maintainers:
+    - name: Quarky9
+    name: kubezero-cert-manager
+    type: application
+    urls:
+    - kubezero-cert-manager-0.4.1.tgz
+    version: 0.4.1
+  - apiVersion: v2
+    created: "2020-11-30T10:01:36.962993559-08:00"
     dependencies:
     - name: kubezero-lib
       repository: https://zero-down-time.github.io/kubezero/
@@ -157,8 +255,36 @@ entries:
     version: 0.4.0
   kubezero-istio:
   - apiVersion: v2
+    appVersion: 1.7.4
+    created: "2020-11-30T10:01:36.980169928-08:00"
+    dependencies:
+    - name: kubezero-lib
+      repository: https://zero-down-time.github.io/kubezero/
+      version: '>= 0.1.3'
+    - name: base
+      repository: ""
+      version: 1.1.0
+    - name: istio-discovery
+      repository: ""
+      version: 1.2.0
+    description: KubeZero Umbrella Chart for Istio
+    digest: aeac2b87d6025f99f8df2da300ac9d5f33f1f6619efea515379e95a3e2cfc893
+    home: https://kubezero.com
+    icon: https://cdn.zero-downtime.net/assets/kubezero/logo-small-64.png
+    keywords:
+    - kubezero
+    - istio
+    kubeVersion: '>= 1.16.0'
+    maintainers:
+    - name: Quarky9
+    name: kubezero-istio
+    type: application
+    urls:
+    - kubezero-istio-0.4.0.tgz
+    version: 0.4.0
+  - apiVersion: v2
     appVersion: 1.7.3
-    created: "2020-11-30T06:27:16.195185415-08:00"
+    created: "2020-11-30T10:01:36.975854996-08:00"
     dependencies:
     - name: kubezero-lib
       repository: https://zero-down-time.github.io/kubezero/
@@ -181,11 +307,42 @@ entries:
     urls:
     - kubezero-istio-0.3.4.tgz
     version: 0.3.4
+  kubezero-istio-ingress:
+  - apiVersion: v2
+    appVersion: 1.8.0
+    created: "2020-11-30T10:01:36.983680625-08:00"
+    dependencies:
+    - name: kubezero-lib
+      repository: https://zero-down-time.github.io/kubezero/
+      version: '>= 0.1.3'
+    - condition: istio-ingress.enabled
+      name: istio-ingress
+      repository: ""
+      version: 1.1.0
+    - condition: istio-private-ingress.enabled
+      name: istio-private-ingress
+      repository: ""
+      version: 1.1.0
+    description: KubeZero Umbrella Chart for Istio based Ingress
+    digest: 0a9ee27a616b01e32c9efd399ecf3c65bc14e11b4eb38e67452301fac5335a32
+    home: https://kubezero.com
+    icon: https://cdn.zero-downtime.net/assets/kubezero/logo-small-64.png
+    keywords:
+    - kubezero
+    - istio
+    kubeVersion: '>= 1.16.0'
+    maintainers:
+    - name: Quarky9
+    name: kubezero-istio-ingress
+    type: application
+    urls:
+    - kubezero-istio-ingress-0.1.0.tgz
+    version: 0.1.0
   kubezero-lib:
   - apiVersion: v2
-    created: "2020-11-30T06:27:16.195424144-08:00"
+    created: "2020-11-30T10:01:36.983884777-08:00"
     description: KubeZero helm library - common helm functions and blocks
-    digest: 5e3b25e81da516d27422b67840fff7995d50209728db80acb1ad40dccf7e26f8
+    digest: 8ef1cb8d68d0af1c0fdea113dfa5b447c6fda591a2338b2601bcd303c9c6da7c
     home: https://kubezero.com
     icon: https://cdn.zero-downtime.net/assets/kubezero/logo-small-64.png
     keywords:
@@ -198,16 +355,39 @@ entries:
     urls:
     - kubezero-lib-0.1.3.tgz
     version: 0.1.3
+  kubezero-local-path-provisioner:
+  - apiVersion: v2
+    appVersion: 0.0.18
+    created: "2020-11-30T10:01:36.985058561-08:00"
+    dependencies:
+    - name: kubezero-lib
+      repository: https://zero-down-time.github.io/kubezero/
+      version: '>= 0.1.3'
+    description: KubeZero Umbrella Chart for local-path-provisioner
+    digest: 4695fe3f3c18fe92857591e6d64b7eb69f40da42ae9f043f6f3ed827926ecaaa
+    home: https://kubezero.com
+    icon: https://cdn.zero-downtime.net/assets/kubezero/logo-small-64.png
+    keywords:
+    - kubezero
+    - local-path-provisioner
+    kubeVersion: '>= 1.16.0'
+    maintainers:
+    - name: Quarky9
+    name: kubezero-local-path-provisioner
+    type: application
+    urls:
+    - kubezero-local-path-provisioner-0.1.0.tgz
+    version: 0.1.0
   kubezero-local-volume-provisioner:
   - apiVersion: v2
     appVersion: 2.3.4
-    created: "2020-11-30T06:27:16.196447621-08:00"
+    created: "2020-11-30T10:01:36.98740241-08:00"
     dependencies:
     - name: kubezero-lib
       repository: https://zero-down-time.github.io/kubezero/
       version: '>= 0.1.3'
     description: KubeZero Umbrella Chart for local-static-provisioner
-    digest: e04781f1215063de5374991928ffd7d2cf4686a41c385e1e89e758dfac772ee7
+    digest: 5e1a0cfb5babfa141cc480c861e482820e961b6dc8ad9b1fa6d087629eacbfa9
     home: https://kubezero.com
     icon: https://cdn.zero-downtime.net/assets/kubezero/logo-small-64.png
     keywords:
@@ -221,4 +401,97 @@ entries:
     urls:
     - kubezero-local-volume-provisioner-0.1.0.tgz
     version: 0.1.0
-generated: "2020-11-30T06:27:16.168360217-08:00"
+  kubezero-logging:
+  - apiVersion: v2
+    appVersion: 1.3.0
+    created: "2020-11-30T10:01:36.992565055-08:00"
+    dependencies:
+    - name: kubezero-lib
+      repository: https://zero-down-time.github.io/kubezero/
+      version: '>= 0.1.3'
+    - condition: eck-operator.enabled
+      name: eck-operator
+      repository: https://helm.elastic.co
+      version: 1.3.0
+    - condition: fluentd.enabled
+      name: fluentd
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 2.5.1
+    - condition: fluent-bit.enabled
+      name: fluent-bit
+      repository: https://zero-down-time.github.io/kubezero/
+      version: 0.7.10
+    description: KubeZero Umbrella Chart for complete EFK stack
+    digest: 838cae3b7d1173c76be23ee314ad21e7120ab4a210f3150cc718e7620243634a
+    home: https://kubezero.com
+    icon: https://cdn.zero-downtime.net/assets/kubezero/logo-small-64.png
+    keywords:
+    - kubezero
+    - elasticsearch
+    - kibana
+    - fluentd
+    - fluent-bit
+    kubeVersion: '>= 1.16.0'
+    maintainers:
+    - name: Quarky9
+    name: kubezero-logging
+    type: application
+    urls:
+    - kubezero-logging-0.5.0.tgz
+    version: 0.5.0
+  kubezero-metrics:
+  - apiVersion: v2
+    created: "2020-11-30T10:01:37.017783139-08:00"
+    dependencies:
+    - name: kubezero-lib
+      repository: https://zero-down-time.github.io/kubezero/
+      version: '>= 0.1.3'
+    - name: kube-prometheus-stack
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 12.2.4
+    - condition: prometheus-adapter.enabled
+      name: prometheus-adapter
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 2.7.1
+    description: KubeZero Umbrella Chart for prometheus-operator
+    digest: c9a050a04be7e175c8c610d0223371b3465fccfedb7ca97be1c6b60027e64b6f
+    home: https://kubezero.com
+    icon: https://cdn.zero-downtime.net/assets/kubezero/logo-small-64.png
+    keywords:
+    - kubezero
+    - prometheus
+    - grafana
+    kubeVersion: '>= 1.16.0'
+    maintainers:
+    - name: Quarky9
+    name: kubezero-metrics
+    type: application
+    urls:
+    - kubezero-metrics-0.3.0.tgz
+    version: 0.3.0
+  kubezero-redis:
+  - apiVersion: v2
+    created: "2020-11-30T10:01:37.023305616-08:00"
+    dependencies:
+    - name: kubezero-lib
+      repository: https://zero-down-time.github.io/kubezero/
+      version: '>= 0.1.3'
+    - name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.0.0
+    description: KubeZero Umbrella Chart for Redis HA
+    digest: 115c3f3d22ef94ea41c416d8895124bde69c67990fb9ca8aea9c377ca71f76f6
+    home: https://kubezero.com
+    icon: https://cdn.zero-downtime.net/assets/kubezero/logo-small-64.png
+    keywords:
+    - kubezero
+    - redis
+    kubeVersion: '>= 1.16.0'
+    maintainers:
+    - name: Quarky9
+    name: kubezero-redis
+    type: application
+    urls:
+    - kubezero-redis-0.1.0.tgz
+    version: 0.1.0
+generated: "2020-11-30T10:01:36.923255416-08:00"
