@@ -2,7 +2,7 @@ apiVersion: v1
 entries:
   kubezero-argo-cd:
   - apiVersion: v2
-    created: "2020-11-30T06:23:38.750947912-08:00"
+    created: "2020-11-30T06:26:37.83220815-08:00"
     dependencies:
     - name: kubezero-lib
       repository: https://zero-down-time.github.io/kubezero/
@@ -29,7 +29,7 @@ entries:
   kubezero-aws-ebs-csi-driver:
   - apiVersion: v2
     appVersion: 0.7.0
-    created: "2020-11-30T06:23:38.752283039-08:00"
+    created: "2020-11-30T06:26:37.8335903-08:00"
     dependencies:
     - name: kubezero-lib
       repository: https://zero-down-time.github.io/kubezero/
@@ -57,7 +57,7 @@ entries:
   kubezero-aws-efs-csi-driver:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2020-11-30T06:23:38.753376578-08:00"
+    created: "2020-11-30T06:26:37.834535831-08:00"
     dependencies:
     - name: kubezero-lib
       repository: https://zero-down-time.github.io/kubezero/
@@ -84,7 +84,7 @@ entries:
   kubezero-calico:
   - apiVersion: v2
     appVersion: v3.16.1
-    created: "2020-11-30T06:23:38.756732586-08:00"
+    created: "2020-11-30T06:26:37.836343749-08:00"
     dependencies:
     - name: kubezero-lib
       repository: https://zero-down-time.github.io/kubezero/
@@ -106,7 +106,7 @@ entries:
     version: 0.2.0
   kubezero-cert-manager:
   - apiVersion: v2
-    created: "2020-11-30T06:23:38.767610079-08:00"
+    created: "2020-11-30T06:26:37.847623507-08:00"
     dependencies:
     - name: kubezero-lib
       repository: https://zero-down-time.github.io/kubezero/
@@ -132,7 +132,7 @@ entries:
   kubezero-istio:
   - apiVersion: v2
     appVersion: 1.7.3
-    created: "2020-11-30T06:23:38.769672666-08:00"
+    created: "2020-11-30T06:26:37.8508651-08:00"
     dependencies:
     - name: kubezero-lib
       repository: https://zero-down-time.github.io/kubezero/
@@ -157,7 +157,7 @@ entries:
     version: 0.3.4
   kubezero-lib:
   - apiVersion: v2
-    created: "2020-11-30T06:23:38.769866116-08:00"
+    created: "2020-11-30T06:26:37.851093459-08:00"
     description: KubeZero helm library - common helm functions and blocks
     digest: 5e3b25e81da516d27422b67840fff7995d50209728db80acb1ad40dccf7e26f8
     home: https://kubezero.com
@@ -175,7 +175,7 @@ entries:
   kubezero-local-volume-provisioner:
   - apiVersion: v2
     appVersion: 2.3.4
-    created: "2020-11-30T06:23:38.770962052-08:00"
+    created: "2020-11-30T06:26:37.85215359-08:00"
     dependencies:
     - name: kubezero-lib
       repository: https://zero-down-time.github.io/kubezero/
@@ -195,4 +195,4 @@ entries:
     urls:
     - kubezero-local-volume-provisioner-0.1.0.tgz
     version: 0.1.0
-generated: "2020-11-30T06:23:38.74458648-08:00"
+generated: "2020-11-30T06:26:37.823788258-08:00"
