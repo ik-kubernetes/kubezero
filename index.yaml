@@ -1,10 +1,165 @@
 apiVersion: v1
 entries:
+  kubezero-argo-cd:
+  - apiVersion: v2
+    created: "2020-11-30T06:21:27.329259755-08:00"
+    dependencies:
+    - name: kubezero-lib
+      repository: https://zero-down-time.github.io/kubezero/
+      version: '>= 0.1.3'
+    - name: argo-cd
+      repository: https://argoproj.github.io/argo-helm
+      version: 2.9.3
+    description: KubeZero ArgoCD Helm chart to install ArgoCD itself and the KubeZero
+      ArgoCD Application
+    digest: 5874248bf421219b9d088a6bbc684801cb080a9bb46bd5cb91195daaf93c285e
+    home: https://kubezero.com
+    icon: https://cdn.zero-downtime.net/assets/kubezero/logo-small-64.png
+    keywords:
+    - kubezero
+    - argocd
+    - gitops
+    kubeVersion: '>= 1.17.0'
+    maintainers:
+    - name: Quarky9
+    name: kubezero-argo-cd
+    urls:
+    - kubezero-argo-cd-0.6.0.tgz
+    version: 0.6.0
+  kubezero-aws-ebs-csi-driver:
+  - apiVersion: v2
+    appVersion: 0.7.0
+    created: "2020-11-30T06:21:27.331407632-08:00"
+    dependencies:
+    - name: kubezero-lib
+      repository: https://zero-down-time.github.io/kubezero/
+      version: '>= 0.1.3'
+    description: KubeZero Umbrella Chart for aws-ebs-csi-driver
+    digest: 32c739b71b29ec53bcbdc12a429ee3945c69fb56dc47f2690605f535d7ddccf8
+    home: https://kubezero.com
+    icon: https://cdn.zero-downtime.net/assets/kubezero/logo-small-64.png
+    keywords:
+    - kubezero
+    - aws
+    - ebs
+    - csi
+    kubeVersion: '>= 1.16.0'
+    maintainers:
+    - name: Quarky9
+    name: kubezero-aws-ebs-csi-driver
+    sources:
+    - https://github.com/kubernetes-sigs/aws-ebs-csi-driver
+    - https://github.com/Zero-Down-Time/kubezero
+    type: application
+    urls:
+    - kubezero-aws-ebs-csi-driver-0.3.2.tgz
+    version: 0.3.2
+  kubezero-aws-efs-csi-driver:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2020-11-30T06:21:27.332314321-08:00"
+    dependencies:
+    - name: kubezero-lib
+      repository: https://zero-down-time.github.io/kubezero/
+      version: '>= 0.1.3'
+    description: KubeZero Umbrella Chart for aws-efs-csi-driver
+    digest: 42ad75b230564df13944996a5341fe13b46527c192c795003acc054198fec358
+    home: https://kubezero.com
+    icon: https://cdn.zero-downtime.net/assets/kubezero/logo-small-64.png
+    keywords:
+    - kubezero
+    - aws
+    - efs
+    - csi
+    kubeVersion: '>=1.16.0-0'
+    maintainers:
+    - name: Quarky9
+    name: kubezero-aws-efs-csi-driver
+    sources:
+    - https://github.com/Zero-Down-Time/kubezero
+    - https://github.com/kubernetes-sigs/aws-efs-csi-driver
+    urls:
+    - kubezero-aws-efs-csi-driver-0.2.0.tgz
+    version: 0.2.0
+  kubezero-calico:
+  - apiVersion: v2
+    appVersion: v3.16.1
+    created: "2020-11-30T06:21:27.334054463-08:00"
+    dependencies:
+    - name: kubezero-lib
+      repository: https://zero-down-time.github.io/kubezero/
+      version: '>= 0.1.3'
+    description: KubeZero Umbrella Chart for Calico
+    digest: fbd19dcf0890005e1bdf52371c53b4f66888805d616a72f8cc7a84d7ec6934ca
+    home: https://kubezero.com
+    icon: https://cdn.zero-downtime.net/assets/kubezero/logo-small-64.png
+    keywords:
+    - kubezero
+    - calico
+    kubeVersion: '>= 1.16.0'
+    maintainers:
+    - name: Quarky9
+    name: kubezero-calico
+    type: application
+    urls:
+    - kubezero-calico-0.2.0.tgz
+    version: 0.2.0
+  kubezero-cert-manager:
+  - apiVersion: v2
+    created: "2020-11-30T06:21:27.345359854-08:00"
+    dependencies:
+    - name: kubezero-lib
+      repository: https://zero-down-time.github.io/kubezero/
+      version: '>= 0.1.3'
+    - name: cert-manager
+      repository: https://charts.jetstack.io
+      version: 1.0.3
+    description: KubeZero Umbrella Chart for cert-manager
+    digest: 4617db32d33d1a01daf7873b8aa1474f99d5bb3c7c84c015f12041ef258ec124
+    home: https://kubezero.com
+    icon: https://cdn.zero-downtime.net/assets/kubezero/logo-small-64.png
+    keywords:
+    - kubezero
+    - cert-manager
+    kubeVersion: '>= 1.16.0'
+    maintainers:
+    - name: Quarky9
+    name: kubezero-cert-manager
+    type: application
+    urls:
+    - kubezero-cert-manager-0.4.0.tgz
+    version: 0.4.0
+  kubezero-istio:
+  - apiVersion: v2
+    appVersion: 1.7.3
+    created: "2020-11-30T06:21:27.348524023-08:00"
+    dependencies:
+    - name: kubezero-lib
+      repository: https://zero-down-time.github.io/kubezero/
+      version: '>= 0.1.3'
+    - name: istio-operator
+      repository: ""
+      version: '>= 1.7'
+    description: KubeZero Umbrella Chart for Istio
+    digest: 3a552ce2530f826d42cf23b27fbb011d48db5b57c4cac67e1d9699c4d285e78f
+    home: https://kubezero.com
+    icon: https://cdn.zero-downtime.net/assets/kubezero/logo-small-64.png
+    keywords:
+    - kubezero
+    - istio
+    kubeVersion: '>= 1.16.0'
+    maintainers:
+    - name: Quarky9
+    name: kubezero-istio
+    type: application
+    urls:
+    - kubezero-istio-0.3.4.tgz
+    version: 0.3.4
   kubezero-lib:
   - apiVersion: v2
-    created: "2020-11-30T06:19:03.125702294-08:00"
+    created: "2020-11-30T06:21:27.348747487-08:00"
     description: KubeZero helm library - common helm functions and blocks
-    digest: 7eee3ac2b653f51a01cefbd0fdd2a02b01a1a740886370f2f7eb0daa6213fe38
+    digest: 3c5bf29bf207686f25c8c2401ee64e4fe3cc0e28fdf75dfc3e0c40a66da46e8b
     home: https://kubezero.com
     icon: https://cdn.zero-downtime.net/assets/kubezero/logo-small-64.png
     keywords:
@@ -17,4 +172,27 @@ entries:
     urls:
     - kubezero-lib-0.1.3.tgz
     version: 0.1.3
-generated: "2020-11-30T06:19:03.125269624-08:00"
+  kubezero-local-volume-provisioner:
+  - apiVersion: v2
+    appVersion: 2.3.4
+    created: "2020-11-30T06:21:27.350135504-08:00"
+    dependencies:
+    - name: kubezero-lib
+      repository: https://zero-down-time.github.io/kubezero/
+      version: '>= 0.1.3'
+    description: KubeZero Umbrella Chart for local-static-provisioner
+    digest: dad9baffe5664db8ca1440870f889cbb282ce16ac3f428a562d6343e3ad07dbb
+    home: https://kubezero.com
+    icon: https://cdn.zero-downtime.net/assets/kubezero/logo-small-64.png
+    keywords:
+    - kubezero
+    - local-static-provisioner
+    kubeVersion: '>= 1.16.0'
+    maintainers:
+    - name: Quarky9
+    name: kubezero-local-volume-provisioner
+    type: application
+    urls:
+    - kubezero-local-volume-provisioner-0.1.0.tgz
+    version: 0.1.0
+generated: "2020-11-30T06:21:27.318873988-08:00"
