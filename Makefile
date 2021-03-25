@@ -2,16 +2,12 @@ BUCKET ?= zero-downtime
 BUCKET_PREFIX ?= /cloudbender/distfiles
 FILES ?= distfiles.txt
 
-.PHONY: clean update docs
+.PHONY: update docs
 
 all: update
 
-
-clean:
-	rm -f kube*.tgz
-
 update:
-	./script/update_helm.sh
+	./scripts/update_helm.sh
 
 docs:
 	for c in charts/*; do \
@@ -19,3 +15,6 @@ docs:
 		[[ $$c =~ "kubeadm" ]] && continue ; \
 		helm-docs -c $$c ; \
 	done
+
+publish:
+	./scripts/publish.sh

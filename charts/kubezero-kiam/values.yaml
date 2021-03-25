@@ -22,10 +22,10 @@ kiam:
     resources:
      requests:
        memory: "50Mi"
-       cpu: "100m"
+       cpu: "50m"
      limits:
-       memory: "50Mi"
-       cpu: "100m"
+       memory: "100Mi"
+       # cpu: "300m"
     tolerations:
     - key: node-role.kubernetes.io/master
       effect: NoSchedule
@@ -48,7 +48,7 @@ kiam:
     host:
       iptables: false
       interface: "cali+"
-    whiteListRouteRegexp: '^/latest/(meta-data/instance-id|dynamic)'
+    allowRouteRegexp: '^/latest/(meta-data/instance-id|dynamic)'
     sslCertHostPath: /etc/ssl/certs
     tlsSecret: kiam-agent-tls
     tlsCerts:
@@ -61,7 +61,7 @@ kiam:
        cpu: "50m"
      limits:
        memory: "20Mi"
-       cpu: "50m"
+       # cpu: "50m"
     tolerations:
     - key: node-role.kubernetes.io/master
       effect: NoSchedule

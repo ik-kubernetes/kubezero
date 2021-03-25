@@ -1,9 +1,10 @@
 aws-ebs-csi-driver:
   replicaCount: 1
+  logLevel: 1
 
   enableVolumeScheduling: true
-  enableVolumeResizing: false
-  enableVolumeSnapshot: false
+  enableVolumeResizing: true
+  enableVolumeSnapshot: true
 
   nodeSelector:
     node-role.kubernetes.io/master: ""
@@ -20,6 +21,28 @@ aws-ebs-csi-driver:
   extraVolumeTags: {}
   #  Name: KubeZero-Cluster
 
-StorageClass:
-  create: true
-  default: true
+  resources:
+    requests:
+      cpu: 10m
+      memory: 24Mi
+    limits:
+      # cpu: 50m
+      memory: 40Mi
+
+  storageClasses:
+  - name: ebs-sc-gp2-xfs
+    volumeBindingMode: WaitForFirstConsumer
+    allowVolumeExpansion: true
+    parameters:
+      csi.storage.k8s.io/fstype: xfs
+      type: gp2
+      encrypted: "true"
+  - name: ebs-sc-gp3-xfs
+    annotations:
+      storageclass.kubernetes.io/is-default-class: "true"
+    volumeBindingMode: WaitForFirstConsumer
+    allowVolumeExpansion: true
+    parameters:
+      csi.storage.k8s.io/fstype: xfs
+      type: gp3
+      encrypted: "true"

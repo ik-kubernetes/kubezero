@@ -1,11 +1,17 @@
-clusterVersion: 1.18.0
+clusterVersion: 1.19.0
+listenAddress: 0.0.0.0
 clusterName: pleasechangeme
 apiEndpoint: kube-api.changeme.org:6443
 etcdExtraArgs: {}
-  # Enable for > 1.18
-  # unsafe-no-fsync: "true"
 apiExtraArgs: {}
 clusterHighAvailable: false
 allEtcdEndpoints: ""
-joinToken: ""
-caCertHash: ""
+# supported values aws,bare-metal
+platform: "aws"
+# Set to false for openrc, eg. on Gentoo or Alpine
+systemd: true
+protectKernelDefaults: true
+
+WorkerNodeRole: "arn:aws:iam::000000000000:role/KubernetesNode"
+WorkerIamRole: "arn:aws:iam::000000000000:role/KubernetesNode"
+KubeAdminRole: "arn:aws:iam::000000000000:role/KubernetesNode"

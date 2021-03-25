@@ -1,6 +1,20 @@
 aws-efs-csi-driver:
-  nodeSelector:  {}
-    # node.kubernetes.io/csi.efs.fs: EFS-FS_ID
+  logLevel: 1
+
+  resources:
+    requests:
+      cpu: 20m
+      memory: 64Mi
+    limits:
+      memory: 128Mi
+
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: node.kubernetes.io/csi.efs.fs
+            operator: Exists
 
 StorageClass:
   create: true

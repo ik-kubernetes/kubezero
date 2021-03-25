@@ -1,0 +1,53 @@
+diff -tubNr charts/aws-efs-csi-driver/templates/node-daemonset.yaml charts/aws-efs-csi-driver.zdt/templates/node-daemonset.yaml
+--- charts/aws-efs-csi-driver/templates/node-daemonset.yaml	2021-03-19 00:22:54.000000000 +0100
++++ charts/aws-efs-csi-driver.zdt/templates/node-daemonset.yaml	2021-03-24 13:06:56.105762451 +0100
+@@ -40,15 +40,10 @@
+         {{- with .Values.nodeSelector }}
+         {{- . | toYaml | nindent 8 }}
+         {{- end }}
++      {{- with .Values.affinity }}
+       affinity:
+-        nodeAffinity:
+-          requiredDuringSchedulingIgnoredDuringExecution:
+-            nodeSelectorTerms:
+-            - matchExpressions:
+-              - key: eks.amazonaws.com/compute-type
+-                operator: NotIn
+-                values:
+-                - fargate
++        {{- . | toYaml | nindent 8 }}
++      {{- end }}
+       hostNetwork: true
+       {{- if .Values.dnsPolicy }}
+       dnsPolicy: "{{ .Values.dnsPolicy }}"
+@@ -99,6 +94,10 @@
+             timeoutSeconds: 3
+             periodSeconds: 2
+             failureThreshold: 5
++          {{- with .Values.resources }}
++          resources:
++            {{- . | toYaml | nindent 12 }}
++          {{- end }}
+         - name: csi-driver-registrar
+           image: {{ printf "%s:%s" .Values.sidecars.nodeDriverRegistrarImage.repository .Values.sidecars.nodeDriverRegistrarImage.tag }}
+           args:
+diff -tubNr charts/aws-efs-csi-driver/values.yaml charts/aws-efs-csi-driver.zdt/values.yaml
+--- charts/aws-efs-csi-driver/values.yaml	2021-03-19 00:22:54.000000000 +0100
++++ charts/aws-efs-csi-driver.zdt/values.yaml	2021-03-24 13:06:56.105762451 +0100
+@@ -43,7 +43,15 @@
+ 
+ tolerations: []
+ 
+-affinity: {}
++affinity:
++  nodeAffinity:
++    requiredDuringSchedulingIgnoredDuringExecution:
++      nodeSelectorTerms:
++      - matchExpressions:
++        - key: eks.amazonaws.com/compute-type
++          operator: NotIn
++          values:
++          - fargate
+ 
+ node:
+   podAnnotations: {}

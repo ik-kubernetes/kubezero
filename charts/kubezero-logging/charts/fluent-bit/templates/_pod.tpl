@@ -9,6 +9,12 @@ priorityClassName: {{ .Values.priorityClassName }}
 serviceAccountName: {{ include "fluent-bit.serviceAccountName" . }}
 securityContext:
   {{- toYaml .Values.podSecurityContext | nindent 2 }}
+{{- with .Values.dnsConfig }}
+dnsConfig:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
+#hostNetwork: true
+#dnsPolicy: ClusterFirstWithHostNet
 containers:
   - name: {{ .Chart.Name }}
     securityContext:
@@ -34,14 +40,14 @@ containers:
         protocol: {{ .protocol }}
       {{- end }}
     {{- end }}
+    {{- if .Values.livenessProbe }}
     livenessProbe:
-      httpGet:
-        path: /
-        port: http
+      {{- toYaml .Values.livenessProbe | nindent 6 }}
+    {{- end }}
+    {{- if .Values.readinessProbe }}
     readinessProbe:
-      httpGet:
-        path: /
-        port: http
+      {{- toYaml .Values.readinessProbe | nindent 6 }}
+    {{- end }}
     resources:
       {{- toYaml .Values.resources | nindent 6 }}
     volumeMounts:
@@ -51,15 +57,14 @@ containers:
       - name: config
         mountPath: /fluent-bit/etc/custom_parsers.conf
         subPath: custom_parsers.conf
-      - name: config
-        mountPath: /fluent-bit/etc/functions.lua
-        subPath: functions.lua
+    {{- range $key, $value := .Values.luaScripts }}
+      - name: luascripts
+        mountPath: /fluent-bit/scripts/{{ $key }}
+        subPath: {{ $key }}
+    {{- end }}
     {{- if eq .Values.kind "DaemonSet" }}
       - name: varlog
         mountPath: /var/log
-      - name: varlibdockercontainers
-        mountPath: /var/lib/docker/containers
-        readOnly: true
       - name: etcmachineid
         mountPath: /etc/machine-id
         readOnly: true
@@ -71,13 +76,15 @@ volumes:
   - name: config
     configMap:
       name: {{ if .Values.existingConfigMap }}{{ .Values.existingConfigMap }}{{- else }}{{ include "fluent-bit.fullname" . }}{{- end }}
+{{- if gt (len .Values.luaScripts) 0 }}
+  - name: luascripts
+    configMap:
+      name: {{ include "fluent-bit.fullname" . }}-luascripts
+{{- end }}
 {{- if eq .Values.kind "DaemonSet" }}
   - name: varlog
     hostPath:
       path: /var/log
-  - name: varlibdockercontainers
-    hostPath:
-      path: /var/lib/docker/containers
   - name: etcmachineid
     hostPath:
       path: /etc/machine-id

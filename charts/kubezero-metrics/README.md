@@ -1,6 +1,6 @@
 # kubezero-metrics
 
-![Version: 0.3.1](https://img.shields.io/badge/Version-0.3.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.3.4](https://img.shields.io/badge/Version-0.3.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 KubeZero Umbrella Chart for prometheus-operator
 
@@ -14,12 +14,12 @@ KubeZero Umbrella Chart for prometheus-operator
 
 ## Requirements
 
-Kubernetes: `>= 1.16.0`
+Kubernetes: `>= 1.18.0`
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://prometheus-community.github.io/helm-charts | kube-prometheus-stack | 12.3.0 |
-| https://prometheus-community.github.io/helm-charts | prometheus-adapter | 2.7.1 |
+|  | kube-prometheus-stack | 14.3.0 |
+| https://prometheus-community.github.io/helm-charts | prometheus-adapter | 2.12.1 |
 | https://zero-down-time.github.io/kubezero/ | kubezero-lib | >= 0.1.3 |
 
 ## Values
@@ -82,12 +82,14 @@ Kubernetes: `>= 1.16.0`
 | kube-prometheus-stack.nodeExporter.serviceMonitor.relabelings[0].separator | string | `";"` |  |
 | kube-prometheus-stack.nodeExporter.serviceMonitor.relabelings[0].sourceLabels[0] | string | `"__meta_kubernetes_pod_node_name"` |  |
 | kube-prometheus-stack.nodeExporter.serviceMonitor.relabelings[0].targetLabel | string | `"node"` |  |
+| kube-prometheus-stack.prometheus-node-exporter.resources.requests.cpu | string | `"20m"` |  |
+| kube-prometheus-stack.prometheus-node-exporter.resources.requests.memory | string | `"16Mi"` |  |
 | kube-prometheus-stack.prometheus.enabled | bool | `true` |  |
 | kube-prometheus-stack.prometheus.prometheusSpec.logFormat | string | `"json"` |  |
 | kube-prometheus-stack.prometheus.prometheusSpec.portName | string | `"http-prometheus"` |  |
 | kube-prometheus-stack.prometheus.prometheusSpec.resources.limits.memory | string | `"3Gi"` |  |
 | kube-prometheus-stack.prometheus.prometheusSpec.resources.requests.cpu | string | `"500m"` |  |
-| kube-prometheus-stack.prometheus.prometheusSpec.resources.requests.memory | string | `"1Gi"` |  |
+| kube-prometheus-stack.prometheus.prometheusSpec.resources.requests.memory | string | `"512Mi"` |  |
 | kube-prometheus-stack.prometheus.prometheusSpec.retention | string | `"8d"` |  |
 | kube-prometheus-stack.prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.accessModes[0] | string | `"ReadWriteOnce"` |  |
 | kube-prometheus-stack.prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.resources.requests.storage | string | `"16Gi"` |  |
@@ -101,9 +103,13 @@ Kubernetes: `>= 1.16.0`
 | kube-prometheus-stack.prometheusOperator.namespaces.additional[1] | string | `"logging"` |  |
 | kube-prometheus-stack.prometheusOperator.namespaces.releaseNamespace | bool | `true` |  |
 | kube-prometheus-stack.prometheusOperator.nodeSelector."node-role.kubernetes.io/master" | string | `""` |  |
+| kube-prometheus-stack.prometheusOperator.resources.limits.memory | string | `"64Mi"` |  |
+| kube-prometheus-stack.prometheusOperator.resources.requests.cpu | string | `"20m"` |  |
+| kube-prometheus-stack.prometheusOperator.resources.requests.memory | string | `"32Mi"` |  |
 | kube-prometheus-stack.prometheusOperator.tolerations[0].effect | string | `"NoSchedule"` |  |
 | kube-prometheus-stack.prometheusOperator.tolerations[0].key | string | `"node-role.kubernetes.io/master"` |  |
 | prometheus-adapter.enabled | bool | `true` |  |
+| prometheus-adapter.logLevel | int | `1` |  |
 | prometheus-adapter.nodeSelector."node-role.kubernetes.io/master" | string | `""` |  |
 | prometheus-adapter.prometheus.url | string | `"http://metrics-kube-prometheus-st-prometheus"` |  |
 | prometheus-adapter.rules.default | bool | `false` |  |

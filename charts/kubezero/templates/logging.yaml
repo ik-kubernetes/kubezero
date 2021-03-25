@@ -44,23 +44,29 @@ kibana:
   {{- end }}
 {{- end }}
 
-{{- if .Values.logging.fluentd }}
+{{- with .Values.logging.fluentd }}
 fluentd:
-  enabled: {{ .Values.logging.fluentd.enabled }}
+  enabled: {{ .enabled }}
+  replicaCount: {{ default 1 .replicaCount }}
   metrics:
-    enabled: {{ .Values.metrics.enabled }}
-  url: {{ .Values.logging.fluentd.url }}
-  {{- if .Values.logging.fluentd.output }}
+    serviceMonitor:
+      enabled: {{ $.Values.metrics.enabled }}
+  url: {{ .url }}
+  {{- if .output }}
   output:
-    host: {{ .Values.logging.fluentd.output.host }}
+    host: {{ .output.host }}
   {{- end }}
-  {{- if .Values.logging.fluentd.extraEnvVars }}
+  {{- with .affinity }}
+  affinity:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- if .extraEnvVars }}
   extraEnvVars:
-    {{- toYaml .Values.logging.fluentd.extraEnvVars | nindent 8 }}
+    {{- toYaml .extraEnvVars | nindent 8 }}
   {{- end }}
-  {{- if and .Values.logging.fluentd.istio .Values.istio.enabled }}
+  {{- if and .istio $.Values.istio.enabled }}
   istio:
-    {{- with .Values.logging.fluentd.istio }}
+    {{- with .istio }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
   {{- end }}
@@ -96,6 +102,7 @@ fluent-bit:
     - /webhooks/5/clientConfig/caBundle
     - /webhooks/6/clientConfig/caBundle
     - /webhooks/7/clientConfig/caBundle
+    - /webhooks/8/clientConfig/caBundle
   - group: apiextensions.k8s.io
     kind: CustomResourceDefinition
     jsonPointers:
