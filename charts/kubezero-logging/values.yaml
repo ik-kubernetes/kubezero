@@ -227,7 +227,7 @@ fluent-bit:
       tls: false
 
     input:
-      memBufLimit: 16MB
+      memBufLimit: 4MB
       refreshInterval: 10
 
     logLevel: warn
@@ -256,7 +256,7 @@ fluent-bit:
           DB /var/log/flb_kube.db
           DB.Sync Normal
           {{- with .Values.config.input }}
-          Mem_Buf_Limit {{ default "16MB" .memBufLimit }}
+          Mem_Buf_Limit {{ default "4MB" .memBufLimit }}
           Refresh_Interval {{ default 10 .refreshInterval }}
           {{- end }}
 
@@ -350,3 +350,19 @@ fluent-bit:
           end
           return 1, timestamp, new_record
       end
+
+  daemonSetVolumes:
+  - name: varlog
+    hostPath:
+      path: /var/log
+  - name: etcmachineid
+    hostPath:
+      path: /etc/machine-id
+      type: File
+
+  daemonSetVolumeMounts:
+  - name: varlog
+    mountPath: /var/log
+  - name: etcmachineid
+    mountPath: /etc/machine-id
+    readOnly: true
