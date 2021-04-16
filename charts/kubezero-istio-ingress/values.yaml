@@ -1,7 +1,7 @@
 # Make sure these values match kuberzero-istio !!!
 global:
   #hub: docker.io/istio
-  #tag: 1.9.0
+  #tag: 1.9.3
 
   logAsJson: true
   jwtPolicy: first-party-jwt
@@ -23,10 +23,11 @@ istio-ingress:
       replicaCount: 1
       resources:
         requests:
+          cpu: 50m
           memory: 64Mi
         limits:
           # cpu: 100m
-          memory: 256Mi
+          memory: 512Mi
       externalTrafficPolicy: Local
       podAntiAffinityLabelSelector:
       - key: app
@@ -37,7 +38,6 @@ istio-ingress:
       env:
         TERMINATION_DRAIN_DURATION_SECONDS: '"60"'
         # ISTIO_META_HTTP10: '"1"'
-
       # The node selector is normally the list of nodeports, see CloudBender
       nodeSelector:
         node.kubernetes.io/ingress.public: "30080_30443"
@@ -87,11 +87,11 @@ istio-private-ingress:
       replicaCount: 1
       resources:
         requests:
-          cpu: 100m
+          cpu: 50m
           memory: 64Mi
         limits:
           # cpu: 100m
-          memory: 256Mi
+          memory: 512Mi
       externalTrafficPolicy: Local
       podAntiAffinityLabelSelector:
       - key: app
@@ -102,7 +102,6 @@ istio-private-ingress:
       env:
         TERMINATION_DRAIN_DURATION_SECONDS: '"60"'
         # ISTIO_META_HTTP10: '"1"'
-
       nodeSelector:
         node.kubernetes.io/ingress.private: "31080_31443"
         #nodeSelector: "31080_31443_31671_31672_31224"
