@@ -23,6 +23,9 @@ kiam:
 aws-node-termination-handler:
   enabled: false
 
+timemachine:
+  enabled: false
+
 local-volume-provisioner:
   enabled: false
 
@@ -31,6 +34,7 @@ local-path-provisioner:
 
 aws-ebs-csi-driver:
   enabled: false
+  crds: true
 
 aws-efs-csi-driver:
   enabled: false
