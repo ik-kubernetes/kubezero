@@ -1,13 +1,15 @@
 {{- define "istio-values" }}
 
+istio-discovery:
+  telemetry:
+    enabled: {{ .Values.metrics.enabled }}
 {{- if .Values.HighAvailableControlplane }}
+  pilot:
+    replicaCount: 2
+
 global:
   defaultPodDisruptionBudget:
     enabled: true
-
-istio-discovery:
-  pilot:
-    replicaCount: 2
 {{- end }}
 
 {{- end }}

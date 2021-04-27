@@ -1,6 +1,6 @@
 global:
   # hub: docker.io/istio
-  # tag: 1.9.0
+  # tag: 1.9.3
 
   logAsJson: true
   jwtPolicy: first-party-jwt
@@ -35,13 +35,5 @@ istio-discovery:
     enabled: false
 
   meshConfig:
-    defaultConfig:
-      terminationDrainDuration: 60s
-#     proxyMetadata:
-#       ISTIO_META_HTTP10: '"1"'
     accessLogFile: /dev/stdout
     accessLogEncoding: 'JSON'
-    h2UpgradePolicy: 'DO_NOT_UPGRADE'
-    tcpKeepalive:
-      interval: 30s
-      time: 60s
