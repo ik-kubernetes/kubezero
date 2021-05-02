@@ -23,7 +23,7 @@ spec:
           # TCP_KEEPIDLE = 4
           - level: 6
             name: 4
-            int_value: 60
+            int_value: 120
             state: STATE_LISTENING
           # TCP_KEEPINTVL = 5
           - level: 6
