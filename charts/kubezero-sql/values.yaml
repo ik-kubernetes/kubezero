@@ -1,0 +1,29 @@
+mariadb-galera:
+  enabled: true
+
+  replicaCount: 2
+
+  # Passwords should be fixed otherwise helm will create random new ones each time we template|apply
+  rootUser:
+    password: 12345qwert
+  db:
+    user: mariadb
+    password: 12345qwert
+  galera:
+    mariabackup:
+      password: 12345qwert
+
+  metrics:
+    enabled: false
+    serviceMonitor:
+      enabled: false
+
+    prometheusRules:
+      enabled: false
+
+  istio:
+    enabled: false
+    gateway: istio-ingress/private-ingressgateway
+    url: mariadb.example.com
+
+  configurationConfigMap: "{{ .Release.Name }}-mariadb-galera-configuration"
