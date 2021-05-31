@@ -2,6 +2,7 @@ clusterVersion: 1.19.0
 listenAddress: 0.0.0.0
 clusterName: pleasechangeme
 apiEndpoint: kube-api.changeme.org:6443
+etcd: {}
 etcdExtraArgs: {}
 apiExtraArgs: {}
 clusterHighAvailable: false

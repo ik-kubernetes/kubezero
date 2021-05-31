@@ -16,6 +16,16 @@ etcd:
       {{- with .Values.etcdExtraArgs }}
       {{- toYaml . | nindent 6 }}
       {{- end }}
+    {{- if .Values.etcd.nodeName }}
+    serverCertSANs:
+    - "{{ .Values.etcd.nodeName }}"
+    - "{{ .Values.etcd.nodeName }}.{{ .Values.domain }}"
+    - "{{ .Values.domain }}"
+    peerCertSANs:
+    - "{{ .Values.etcd.nodeName }}"
+    - "{{ .Values.etcd.nodeName }}.{{ .Values.domain }}"
+    - "{{ .Values.domain }}"
+    {{- end }}
 controllerManager:
   extraArgs:
     profiling: "false"
